@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: ZPX back-end code test
+  description: Simple web application that reads data from a Steam database and provides a REST API that could be accessed by an App or Website
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost:5000/steam
+
+paths:
+  /reviews:
+    get:
+      operationId: app.controllers.reviews_list
+      tags:
+        - Reviews
+      summary: Reviews list
+      description: Returns the list of the latest reviews, using paged results
+      responses:
+        '200':
+          description: Latest reviews list OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+
+components:
+  schemas:
+    Review:
+      properties:
+        date_posted:
+          type: Datetime
+        date_updated:
+          type: Datetime
+        id:
+          type: integer
+        review_text:
+          type: string
+        steam_appid:
+          type: integer
+        user_name:
+          type: string
