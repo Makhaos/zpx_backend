@@ -5,16 +5,48 @@ info:
   version: "1.0.0"
 
 servers:
-  - url: http://localhost:5000/steam
+  - url: http://localhost:5000/zpx
 
 paths:
-  /reviews:
+  /:
+    get:
+      tags:
+        - Html page sample
+      summary: Html page
+      description: Displays a sample html page
+      operationId: app.controllers.sample
+      responses:
+        '200':
+          description: Html page loaded OK
+          content:
+            text/html:
+              schema:
+                type: string
+  /steam/reviews:
     get:
       operationId: app.controllers.reviews_list
       tags:
         - Reviews
       summary: Reviews list
       description: Returns the list of the latest reviews, using paged results
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          required: false
+          description: Number of reviews per page
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          required: false
+          description: Page number
       responses:
         '200':
           description: Latest reviews list OK
@@ -22,15 +54,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
-
+  /steam/reviews/findByDate:
+    get:
+      operationId: app.controllers.reviews_between_dates
+      tags:
+        - Reviews
+      summary: Find reviews by date
+      description: Returns a list of the latest reviews between dates
+      parameters:
+        - in: query
+          name: start_date
+          required: true
+          schema:
+            type: string
+            format: date-time
+            default: '2017-04-01 00:00:00'
+          description: Start date
+        - in: query
+          name: end_date
+          required: true
+          schema:
+            type: string
+            format: date-time
+            default: '2018-04-01 00:00:00'
+          description: End date
+      responses:
+        '200':
+          description: Latest reviews by date OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
 components:
   schemas:
     Review:
       properties:
         date_posted:
-          type: Datetime
+          type: string
+          format: date-time
         date_updated:
-          type: Datetime
+          type: string
+          format: date-time
         id:
           type: integer
         review_text:

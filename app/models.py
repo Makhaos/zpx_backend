@@ -14,8 +14,8 @@ class Review(db.Model):
     steam_appid = db.Column(db.Integer)
     user_name = db.Column(db.Text)
     review_text = db.Column(db.Text)
-    date_posted = db.Column(db.DateTime)
     date_updated = db.Column(db.DateTime)
+    date_posted = db.Column(db.DateTime)
 
 
 class ReviewSchema(ma.ModelSchema):
