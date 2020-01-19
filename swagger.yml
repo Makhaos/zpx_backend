@@ -85,6 +85,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
+  /steam/event:
+    get:
+      operationId: app.controllers.event_vote_amount
+      tags:
+        - Events
+      summary: Event votes report
+      description: Returns a report with the amount of positive and negative votes of an event
+      parameters:
+        - in: query
+          name: event_id
+          required: true
+          schema:
+            type: integer
+            default: 123
+          description: The event id
+      responses:
+        '200':
+          description: Sucessful votes report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
 components:
   schemas:
     Review:
@@ -97,9 +119,23 @@ components:
           format: date-time
         id:
           type: integer
+        recommended:
+          type: integer
         review_text:
+          type: string
+        user_name:
+          type: string
+    Event:
+      properties:
+        id:
+          type: integer
+        name:
           type: string
         steam_appid:
           type: integer
-        user_name:
+        time_stamp:
           type: string
+          format: date-time
+        type:
+          type: string
+

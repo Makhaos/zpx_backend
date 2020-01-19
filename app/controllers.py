@@ -1,7 +1,7 @@
 import os
 import flask
-from app.models import Review, ReviewSchema
-from sqlalchemy import desc
+from app.models import Review, ReviewSchema, Event, EventSchema
+from sqlalchemy import desc, asc
 
 
 def sample():
@@ -23,4 +23,24 @@ def reviews_between_dates(start_date, end_date):
                                                                                              desc(Review.date_posted))
     reviews_schema = ReviewSchema(many=True)
     return reviews_schema.dump(reviews)
+
+
+def event_reviews(event_id):
+    event_query = Event.query.filter_by(id=event_id).one()
+    event_schema = EventSchema()
+    event_date = event_schema.dump(event_query)['time_stamp']
+    next_event = Event.query.filter(Event.time_stamp >= event_date).order_by(asc(Event.time_stamp)).first()
+    next_event_date = event_schema.dump(next_event)['time_stamp']
+    return reviews_between_dates(event_date, next_event_date)
+
+
+def event_vote_amount(event_id):
+    pos = 0
+    reviews = event_reviews(event_id)
+    for review in reviews:
+        if review['recommended'] == 1:
+            pos = pos + 1
+    report_amount = {'Amount of positive votes': pos, 'Amount of negative votes': len(reviews)-pos}
+    return flask.jsonify(report_amount)
+
 
