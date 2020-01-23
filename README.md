@@ -22,13 +22,13 @@ If you don't own a **Kubernetes cluster**, install Minikube:
 
 Install **VirtualBox** 5.2 or higher: https://www.virtualbox.org/wiki/Downloads   
 Start the Cluster:        
-`minikube start --vm-driver=virtualbox`     
+`sudo minikube start --vm-driver=virtualbox`     
 Or if already running Minikube from inside a Virtual Machine, skip the creation of an additional VM layer by using the none driver:     
 `sudo minikube start --vm-driver=none`
 
 Deployment
 ----------------------
-Apply a predefined configuration in the cluster:
-`kubectl apply -f zpx-deployment.yml`
+Apply a predefined configuration in the cluster:      
+`sudo kubectl apply -f zpx-deployment.yml`
 
 Open browser at `localhost:30000/zpx/ui` to access **Swagger**.
