@@ -1,26 +1,34 @@
 ZPX back-end code test
+========================================
+The following instructions are to be used in a Linux machine.
 
-docker build -t zpx_image .
+Docker
+----------------------
+In the terminal go to zpx project folder.    
+Create a **docker image** named zpx with tag:local:     
+`docker build -t zpx:local .`
 
-Local Kubernetes cluster:
-Virtual machine running Ubuntu:
-snap install kubectl --classic
+kubectl
+----------------------
+Install kubectl to work with **Kubernetes**.     
+For Ubuntu: `snap install kubectl --classic`    
+For other dist: https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-linux
 
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
-   && sudo install minikube-linux-amd64 /usr/local/bin/minikube
-sudo minikube start --vm-driver=none
+Minikube
+----------------------
+If you don't own a **Kubernetes cluster**, install Minikube:    
+`curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
+   && sudo install minikube-linux-amd64 /usr/local/bin/minikube`
 
-Windows:
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.17.0/bin/windows/amd64/kubectl.exe
-Add the binary in to your PATH.
+Install **VirtualBox** 5.2 or higher: https://www.virtualbox.org/wiki/Downloads   
+Start the Cluster:        
+`minikube start --vm-driver=virtualbox`     
+Or if already running Minikube from inside a Virtual Machine, skip the creation of an additional VM layer by using the none driver:     
+`sudo minikube start --vm-driver=none`
 
-Run the installer:
-https://storage.googleapis.com/minikube/releases/latest/minikube-installer.exe
-Install virtualbox 5.2 or higher:
-minikube start --vm-driver=virtualbox
+Deployment
+----------------------
+Apply a predefined configuration in the cluster:
+`kubectl apply -f zpx-deployment.yml`
 
-
-kubectl apply -f zpx-deployment.yml
-
-Open browser at localhost:30000/zpx/ui to access Swagger
-
+Open browser at `localhost:30000/zpx/ui` to access **Swagger**.
