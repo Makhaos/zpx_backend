@@ -27,7 +27,7 @@ paths:
       operationId: app.controllers.reviews_list
       tags:
         - Reviews
-      summary: Reviews list
+      summary: Find latest reviews
       description: Returns the list of the latest reviews, using paged results
       parameters:
         - in: query
@@ -49,7 +49,7 @@ paths:
           description: Page number
       responses:
         '200':
-          description: Latest reviews list OK
+          description: A JSON object containing the reviews
           content:
             application/json:
               schema:
@@ -80,18 +80,18 @@ paths:
           description: End date
       responses:
         '200':
-          description: Latest reviews by date OK
+          description: A JSON object containing the reviews
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Review'
   /steam/event:
     get:
-      operationId: app.controllers.event_vote_amount
+      operationId: app.controllers.event_report
       tags:
-        - Events
+        - Report
       summary: Event votes report
-      description: Returns a report with the amount of positive and negative votes of an event
+      description: Returns a report with the amount of positive and negative votes of an event and their percentages
       parameters:
         - in: query
           name: event_id
@@ -102,11 +102,13 @@ paths:
           description: The event id
       responses:
         '200':
-          description: Sucessful votes report
+          description: A JSON object containing the report
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Event'
+                $ref: '#/components/schemas/Report'
+        '404':
+          description: NOT FOUND
 components:
   schemas:
     Review:
@@ -125,17 +127,14 @@ components:
           type: string
         user_name:
           type: string
-    Event:
+    Report:
       properties:
-        id:
-          type: integer
-        name:
-          type: string
-        steam_appid:
-          type: integer
-        time_stamp:
-          type: string
-          format: date-time
-        type:
-          type: string
+        negative_pct:
+          type: number
+        negative_votes:
+          type: number
+        positive_pct:
+          type: number
+        positive_votes:
+          type: number
 

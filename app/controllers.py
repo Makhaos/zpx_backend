@@ -1,7 +1,7 @@
 import os
 import flask
 from app.models import Review, ReviewSchema, Event, EventSchema
-from sqlalchemy import desc, asc
+from sqlalchemy import desc, asc, exc
 
 
 def sample():
@@ -25,22 +25,23 @@ def reviews_between_dates(start_date, end_date):
     return reviews_schema.dump(reviews)
 
 
-def event_reviews(event_id):
-    event_query = Event.query.filter_by(id=event_id).one()
+def event_report(event_id):
+    try:
+        event_query = Event.query.filter_by(id=event_id).one()
+    except exc.SQLAlchemyError as e:
+        error = flask.jsonify(str(e))
+        return error, 404
     event_schema = EventSchema()
     event_date = event_schema.dump(event_query)['time_stamp']
     next_event = Event.query.filter(Event.time_stamp >= event_date).order_by(asc(Event.time_stamp)).first()
     next_event_date = event_schema.dump(next_event)['time_stamp']
-    return reviews_between_dates(event_date, next_event_date)
-
-
-def event_vote_amount(event_id):
+    reviews = reviews_between_dates(event_date, next_event_date)
     pos = 0
-    reviews = event_reviews(event_id)
     for review in reviews:
         if review['recommended'] == 1:
             pos = pos + 1
-    report_amount = {'Amount of positive votes': pos, 'Amount of negative votes': len(reviews)-pos}
+    neg = len(reviews) - pos
+    pos_pct = pos / (pos + neg) * 100
+    neg_pct = neg / (pos + neg) * 100
+    report_amount = {'positive_pct': pos_pct, 'negative_pct': neg_pct, 'positive_votes': pos, 'negative_votes': neg}
     return flask.jsonify(report_amount)
-
-
