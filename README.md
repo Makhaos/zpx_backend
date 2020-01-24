@@ -24,7 +24,7 @@ https://docs.docker.com/install/linux/linux-postinstall/
 `sudo apt-get update`      
 `sudo apt-get install docker-ce docker-ce-cli containerd.io`      
 `sudo groupadd docker`     
-`sudo usermod -aG docker $USER` $USER=your username
+`sudo usermod -aG docker $USER` $USER=your username     
 Reboot the machine
 
 ### Dockerize
